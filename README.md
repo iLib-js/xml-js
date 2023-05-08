@@ -372,6 +372,11 @@ Options:
 
 # Contribution
 
+## Origin
+
+This project is forked from [xml-js](https://github.com/nashwaan/xml-js) which seems to be dead for the last 5 years.
+It continues to be offered under the MIT License.
+
 ## Testing
 
 To perform tests on this project, download the full repository from GitHub (not from npm) and then do the following:
