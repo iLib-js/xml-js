@@ -5,102 +5,122 @@ var cases = [
     desc: 'declaration <?xml>',
     xml: '<?xml?>',
     js1: {"_declaration":{}},
-    js2: {"declaration":{}}
+    js2: {"declaration":{}},
+    positions: {}
   }, {
     desc: 'declaration with attributes',
     xml: '<?xml version="1.0" encoding="utf-8"?>',
     js1: {"_declaration":{"_attributes":{"version":"1.0","encoding":"utf-8"}}},
-    js2: {"declaration":{"attributes":{"version":"1.0","encoding":"utf-8"}}}
+    js2: {"declaration":{"attributes":{"version":"1.0","encoding":"utf-8"}}},
+    positions: {}
   }, {
     desc: 'declaration and element',
     xml: '<?xml?>\n<a/>',
     js1: {"_declaration":{},"a":{}},
-    js2: {"declaration":{},"elements":[{"type":"element","name":"a"}]}
+    js2: {"declaration":{},"elements":[{"type":"element","name":"a"}]},
+    positions: {a: 9}
   }, {
     desc: 'declaration and elements',
     xml: '<?xml?>\n<a>\n\v<b/>\n</a>',
     js1: {"_declaration":{},"a":{"b":{}}},
-    js2: {"declaration":{},"elements":[{"type":"element","name":"a","elements":[{"type":"element","name":"b"}]}]}
+    js2: {"declaration":{},"elements":[{"type":"element","name":"a","elements":[{"type":"element","name":"b"}]}]},
+    positions: {a: 9, b: 14}
   }, {
     desc: 'processing instruction <?go there?>',
     xml: '<?go there?>',
     js1: {"_instruction":{"go": "there"}},
-    js2: {"elements":[{"type":"instruction","name":"go","instruction":"there"}]}
+    js2: {"elements":[{"type":"instruction","name":"go","instruction":"there"}]},
+    positions: {}
   }, {
     desc: '2 processing instructions <?go there?><?come here?>',
     xml: '<?go there?><?come here?>',
     js1: {"_instruction":[{"go": "there"},{"come": "here"}]},
-    js2: {"elements":[{"type":"instruction","name":"go","instruction":"there"},{"type":"instruction","name":"come","instruction":"here"}]}
+    js2: {"elements":[{"type":"instruction","name":"go","instruction":"there"},{"type":"instruction","name":"come","instruction":"here"}]},
+    positions: {}
   }, {
     desc: 'should convert comment',
     xml: '<!-- \t Hello, World! \t -->',
     js1: {"_comment":" \t Hello, World! \t "},
-    js2: {"elements":[{"type":"comment","comment":" \t Hello, World! \t "}]}
+    js2: {"elements":[{"type":"comment","comment":" \t Hello, World! \t "}]},
+    positions: {}
   }, {
     desc: 'should convert 2 comments',
     xml: '<!-- \t Hello \t -->\n<!-- \t World \t -->',
     js1: {"_comment":[" \t Hello \t "," \t World \t "]},
-    js2: {"elements":[{"type":"comment","comment":" \t Hello \t "},{"type":"comment","comment":" \t World \t "}]}
+    js2: {"elements":[{"type":"comment","comment":" \t Hello \t "},{"type":"comment","comment":" \t World \t "}]},
+    positions: {}
   }, {
     desc: 'should convert cdata',
     xml: '<![CDATA[ \t <foo></bar> \t ]]>',
     js1: {"_cdata":" \t <foo></bar> \t "},
-    js2: {"elements":[{"type":"cdata","cdata":" \t <foo></bar> \t "}]}
+    js2: {"elements":[{"type":"cdata","cdata":" \t <foo></bar> \t "}]},
+    positions: {}
   }, {
     desc: 'should convert 2 cdata',
     xml: '<![CDATA[ \t data]]><![CDATA[< > " and & \t ]]>',
     js1: {"_cdata":[" \t data", "< > \" and & \t "]},
-    js2: {"elements":[{"type":"cdata","cdata":" \t data"},{"type":"cdata","cdata":"< > \" and & \t "}]}
+    js2: {"elements":[{"type":"cdata","cdata":" \t data"},{"type":"cdata","cdata":"< > \" and & \t "}]},
+    positions: {}
   }, {
     desc: 'should convert doctype',
     xml: '<!DOCTYPE note [\n<!ENTITY foo "baa">]>',
     js1: {"_doctype":"note [\n<!ENTITY foo \"baa\">]"},
-    js2: {"elements":[{"type":"doctype","doctype":"note [\n<!ENTITY foo \"baa\">]"}]}
+    js2: {"elements":[{"type":"doctype","doctype":"note [\n<!ENTITY foo \"baa\">]"}]},
+    positions: {}
   }, {
     desc: 'should convert element',
     xml: '<a/>',
     js1: {"a":{}},
-    js2: {"elements":[{"type":"element","name":"a"}]}
+    js2: {"elements":[{"type":"element","name":"a"}]},
+    positions: {a:1}
   }, {
     desc: 'should convert 2 same elements',
     xml: '<a/>\n<a/>',
     js1: {"a":[{},{}]},
-    js2: {"elements":[{"type":"element","name":"a"},{"type":"element","name":"a"}]}
+    js2: {"elements":[{"type":"element","name":"a"},{"type":"element","name":"a"}]},
+    positions: {a:[1,6]}
   }, {
     desc: 'should convert 2 different elements',
     xml: '<a/>\n<b/>',
     js1: {"a":{},"b":{}},
-    js2: {"elements":[{"type":"element","name":"a"},{"type":"element","name":"b"}]}
+    js2: {"elements":[{"type":"element","name":"a"},{"type":"element","name":"b"}]},
+    positions: {a:1,b:6}
   }, {
     desc: 'should convert attribute',
     xml: '<a x="hello"/>',
     js1: {"a":{_attributes:{"x":"hello"}}},
-    js2: {"elements":[{"type":"element","name":"a","attributes":{"x":"hello"}}]}
+    js2: {"elements":[{"type":"element","name":"a","attributes":{"x":"hello"}}]},
+    positions: {a:1}
   }, {
     desc: 'should convert 2 attributes',
     xml: '<a x="1.234" y="It\'s"/>',
     js1: {"a":{_attributes:{"x":"1.234","y":"It\'s"}}},
-    js2: {"elements":[{"type":"element","name":"a","attributes":{"x":"1.234","y":"It\'s"}}]}
+    js2: {"elements":[{"type":"element","name":"a","attributes":{"x":"1.234","y":"It\'s"}}]},
+    positions: {a:1}
   }, {
     desc: 'should convert text in element',
     xml: '<a> \t Hi \t </a>',
     js1: {"a":{"_text":" \t Hi \t "}},
-    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"text","text":" \t Hi \t "}]}]}
+    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"text","text":" \t Hi \t "}]}]},
+    positions: {a:1}
   }, {
     desc: 'should convert multi-line text',
     xml: '<a>  Hi \n There \t </a>',
     js1: {"a":{"_text":"  Hi \n There \t "}},
-    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"text","text":"  Hi \n There \t "}]}]}
+    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"text","text":"  Hi \n There \t "}]}]},
+    positions: {a:1}
   }, {
     desc: 'should convert nested elements',
     xml: '<a>\n\v<b/>\n</a>',
     js1: {"a":{"b":{}}},
-    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"element","name":"b"}]}]}
+    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"element","name":"b"}]}]},
+    positions: {a:1,b:6}
   }, {
     desc: 'should convert 3 nested elements',
     xml: '<a>\n\v<b>\n\v\v<c/>\n\v</b>\n</a>',
     js1: {"a":{"b":{"c":{}}}},
-    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"element","name":"b","elements":[{"type":"element","name":"c"}]}]}]}
+    js2: {"elements":[{"type":"element","name":"a","elements":[{"type":"element","name":"b","elements":[{"type":"element","name":"c"}]}]}]},
+    positions: {a:1,b:6,c:12}
   }
 
   // todo alwaysArray array case
@@ -109,7 +129,8 @@ var cases = [
 module.exports = function (direction, options) {
   var i, tests = [];
   options = options || {};
-  function applyOptions (obj, pathKey) {
+  var positionIndex = 0;
+  function applyOptions (obj, pathKey, positions) {
     var key, fullKey;
     pathKey = pathKey || '';
     if (obj instanceof Array) {
@@ -117,7 +138,7 @@ module.exports = function (direction, options) {
         return !(options.ignoreText && el.type === 'text' || options.ignoreComment && el.type === 'comment' || options.ignoreCdata && el.type === 'cdata'
         || options.ignoreDoctype && el.type === 'doctype' || options.ignoreDeclaration && el.type === 'declaration' || options.ignoreInstruction && el.type === 'instruction');
       }).map(function (el) {
-        return manipulate(el, pathKey);
+        return manipulate(el, pathKey, positions);
       });
     } else if (typeof obj === 'object') {
       for (key in obj) {
@@ -136,11 +157,11 @@ module.exports = function (direction, options) {
         key = applyAttributesCallback(obj, key, pathKey.split('.').pop());
         if (key.indexOf('_') === 0 && obj[key] instanceof Array) {
           obj[key] = obj[key].map(function (el) {
-            return manipulate(el, fullKey);
+            return manipulate(el, fullKey, positions);
           });
         } else {
           if (key !== 'parent' && key !== '_parent') {
-            obj[key] = manipulate(obj[key], fullKey);
+            obj[key] = manipulate(obj[key], fullKey, positions);
             if (obj[key] instanceof Array && obj[key].length === 0) {
               delete obj[key];
             }
@@ -159,6 +180,20 @@ module.exports = function (direction, options) {
         || options.ignoreDoctype && key === '_doctype' || options.ignoreDeclaration && (key === '_declaration' || key === 'declaration') || options.ignoreInstruction && key === '_instruction') {
           delete obj[key];
         }
+        if (options.position && positions) {
+          if (options.compact && positions[key] && typeof(obj[key]._position) === 'undefined') {
+            if (isArray(obj[key])) {
+                obj[key].forEach(function(element, i) {
+                    element._position = positions[key][i];
+                });
+            } else {
+              obj[key]._position = positions[key];
+            }
+          } else if (typeof(positions[obj.name]) !== 'undefined' && typeof(obj.position) === 'undefined') {
+            var position = isArray(positions[obj.name]) ? positions[obj.name][positionIndex++] : positions[obj.name];
+            obj.position = position;
+          }
+        }
       }
       if (!options.compact && options.addParent && obj.elements) {
         obj.elements.forEach(function (el) {
@@ -173,11 +208,11 @@ module.exports = function (direction, options) {
       // }
     }
     return obj;
-    function manipulate(x, fullKey) {
+    function manipulate(x, fullKey, positions) {
       if (x instanceof Array) {
-        return applyOptions(x, fullKey);
+        return applyOptions(x, fullKey, positions);
       } if (typeof x === 'object') {
-        return applyOptions(x, fullKey);
+        return applyOptions(x, fullKey, positions);
       } else if (typeof x === 'string') {
         x = applyValueCallbacks(x, fullKey.split('.').pop(), fullKey.split('.')[fullKey.split('.').length - 2] || '');
         return options.trim? x.trim() : x;
@@ -252,7 +287,7 @@ module.exports = function (direction, options) {
     tests[i].js = options.compact ? cases[i].js1 : cases[i].js2;
     tests[i].xml = cases[i].xml;
     if (direction === 'xml2js') {
-      tests[i].js = applyOptions(JSON.parse(JSON.stringify(tests[i].js)));
+      tests[i].js = applyOptions(JSON.parse(JSON.stringify(tests[i].js)), undefined, cases[i].positions);
       tests[i].js = applyKeyNames(tests[i].js);
     } else if (direction === 'js2xml') {
       if (!('spaces' in options) || options.spaces === 0 || typeof options.spaces === 'boolean') { tests[i].xml = tests[i].xml.replace(/>\n\v*/gm, '>'); }

@@ -33,6 +33,7 @@ var optionalArgs = [
   { arg: 'no-cdata', type: 'flag', option:'ignoreCdata', desc: 'CData of elements will be ignored.' },
   { arg: 'no-doctype', type: 'flag', option:'ignoreDoctype', desc: 'DOCTYPE of elements will be ignored.' },
   { arg: 'no-comment', type: 'flag', option:'ignoreComment', desc: 'Comments of elements will be ignored.' },
+  { arg: 'position', type: 'flag', option:'position', desc: 'Include the character position of the start of XML elements.' },
   { arg: 'text-key', type: 'string', option:'textKey', desc: 'To change the default \'text\' key.' },
   { arg: 'cdata-key', type: 'string', option:'cdataKey', desc: 'To change the default \'cdata\' key.' },
   { arg: 'doctype-key', type: 'string', option:'doctypeKey', desc: 'To change the default \'doctype\' key.' },

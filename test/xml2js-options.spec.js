@@ -130,6 +130,16 @@ describe('Testing xml2js.js:', function () {
 
     });
 
+    describe('options = {position: true}', function () {
+      var options = {compact: false, position: true};
+      testItems('xml2js', options).forEach(function (test) {
+        it(test.desc, function () {
+          expect(convert.xml2js(test.xml, options)).toEqual(test.js);
+        });
+      });
+
+    });
+
     describe('options = {ignoreCdata: true}', function () {
 
       var options = {compact: false, ignoreCdata: true};
@@ -269,6 +279,16 @@ describe('Testing xml2js.js:', function () {
     describe('options = {ignoreComment: true}', function () {
 
       var options = {compact: true, ignoreComment: true};
+      testItems('xml2js', options).forEach(function (test) {
+        it(test.desc, function () {
+          expect(convert.xml2js(test.xml, options)).toEqual(test.js);
+        });
+      });
+
+    });
+
+    describe('options = {position: true}', function () {
+      var options = {compact: true, position: true};
       testItems('xml2js', options).forEach(function (test) {
         it(test.desc, function () {
           expect(convert.xml2js(test.xml, options)).toEqual(test.js);
