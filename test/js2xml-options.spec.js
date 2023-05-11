@@ -20,7 +20,7 @@ describe('Testing js2xml.js:', function () {
 
     describe('Options set to default values explicitly:', function () {
 
-      var options = {compact: false, spaces: 0, ignoreText: false, ignoreComment: false, ignoreCdata: false, fullTagEmptyElement: false};
+      var options = {compact: false, spaces: 0, ignoreText: false, ignoreComment: false, position: false, ignoreCdata: false, fullTagEmptyElement: false};
       testItems('js2xml', options).forEach(function (test) {
         it(test.desc, function () {
           expect(convert.js2xml(test.js, options)).toEqual(test.xml);
@@ -134,7 +134,7 @@ describe('Testing js2xml.js:', function () {
 
     describe('Options set to default values explicitly:', function () {
 
-      var options = {compact: true, spaces: 0, ignoreText: false, ignoreComment: false, ignoreCdata: false, fullTagEmptyElement: false};
+      var options = {compact: true, spaces: 0, ignoreText: false, ignoreComment: false, position: false, ignoreCdata: false, fullTagEmptyElement: false};
       testItems('js2xml', options).forEach(function (test) {
         it(test.desc, function () {
           expect(convert.js2xml(test.js, options)).toEqual(test.xml);

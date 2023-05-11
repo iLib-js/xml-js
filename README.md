@@ -211,6 +211,7 @@ The below options are applicable for both `xml2js()` and `xml2json()` functions.
 | `ignoreCdata`       | `false` | Whether to ignore parsing CData of the elements. That is, no `cdata` will be generated. |
 | `ignoreDoctype`     | `false` | Whether to ignore parsing Doctype of the elements. That is, no `doctype` will be generated. |
 | `ignoreText`        | `false` | Whether to ignore parsing texts of the elements. That is, no `text` will be generated. |
+| `position`        | `false` | Add character position information for each element when converting from xml->json. |
 
 The below option is applicable only for `xml2json()` function.
 
@@ -366,9 +367,15 @@ Options:
   --type-key           To change the default 'type' key (applicable if --compact is not set).
   --name-key           To change the default 'name' key (applicable if --compact is not set).
   --elements-key       To change the default 'elements' key (applicable if --compact is not set).
+  --position           Add character position information for each element when converting from xml->json.
 ```
 
 # Contribution
+
+## Origin
+
+This project is forked from [xml-js](https://github.com/nashwaan/xml-js) which seems to be dead for the last 5 years.
+It continues to be offered under the MIT License.
 
 ## Testing
 
